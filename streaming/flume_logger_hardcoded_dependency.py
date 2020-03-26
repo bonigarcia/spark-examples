@@ -24,7 +24,8 @@ if __name__ == "__main__":
 
     hostname, port = sys.argv[1:]
     kvs = FlumeUtils.createStream(ssc, hostname, int(port))
-    kvs.pprint()
+    lines = kvs.map(lambda x: x[1])
+    lines.pprint()
 
     ssc.start()
     ssc.awaitTermination()
