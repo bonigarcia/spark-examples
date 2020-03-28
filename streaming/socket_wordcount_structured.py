@@ -4,6 +4,7 @@ from pyspark.sql.functions import split
 
 spark = SparkSession \
     .builder \
+    .master("local[*]") \
     .appName("StructuredNetworkWordCount") \
     .getOrCreate()
 
