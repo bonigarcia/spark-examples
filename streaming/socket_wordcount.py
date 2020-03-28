@@ -2,7 +2,7 @@ from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 
 # Local SparkContext using * threads, depending on the number of logical processors
-sc = SparkContext("local[*]", "NetworkWordCount")
+sc = SparkContext("local[*]", "SocketWordCount")
 
 # Create a local StreamingContext with a batch interval of 5 seconds
 ssc = StreamingContext(sc, 5)
