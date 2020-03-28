@@ -9,8 +9,7 @@ spark = SparkSession \
     .config("spark.cassandra.connection.host", "localhost") \
     .config("spark.cassandra.connection.port", "9042") \
     .getOrCreate()
-sc = spark.sparkContext
-sc.setLogLevel("ERROR")
+spark.sparkContext.setLogLevel("ERROR")
 
 # Create DataFrame object from JSON file
 people = spark.read.json("../data/people.json")
