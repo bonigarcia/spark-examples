@@ -4,14 +4,13 @@ from pyspark import SparkContext
 sc = SparkContext(master="local[*]", appName="file-DTT-stdout")
 
 # 1. Input data: text file
-linesRdd = sc.textFile("../data/hamlet.txt")
+lines = sc.textFile("../data/hamlet.txt")
 
 # 2. Data processing: word count
-out = (linesRdd
-       .flatMap(lambda line: line.split(" "))
-       .map(lambda word: (word, 1))
-       .reduceByKey(lambda x, y: x + y)
-       .collect())
+words = lines.flatMap(lambda line: line.split(" "))
+pairs = words.map(lambda s: (s, 1))
+counts = pairs.reduceByKey(lambda a, b: a + b)
+wordcount = counts.collect()
 
 # 3. Output data: show result in the console
-print(out)
+print(wordcount)
