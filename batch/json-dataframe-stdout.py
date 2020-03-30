@@ -1,28 +1,26 @@
 from pyspark.sql import SparkSession
 
-spark = SparkSession \
-    .builder \
-    .appName("Python Spark SQL basic example") \
-    .getOrCreate()
+# SparkSession (for structured data) in local
+spark = (SparkSession
+         .builder
+         .master("local[*]")
+         .appName("JSONfile-DataStream-StdOut")
+         .getOrCreate())
 
-# spark is an existing SparkSession
+# 1. Input data: JSON file
 df = spark.read.json("../data/people.json")
 
-# Displays the content of the DataFrame to stdout
-df.show()
+df.show()  # Displays the content to stdout
+df.printSchema()  # Displays the schema to stdout
 
-# spark, df are from the previous example
-# Print the schema in a tree format
-df.printSchema()
+# 2. Data processing: word count
+names = df.select("name")
+allInc = df.select(df['name'], df['age'] + 1)
+older21 = df.filter(df['age'] > 21)
+countByAge = df.groupBy("age").count()
 
-# Select only the "name" column
-df.select("name").show()
-
-# Select everybody, but increment the age by 1
-df.select(df['name'], df['age'] + 1).show()
-
-# Select people older than 21
-df.filter(df['age'] > 21).show()
-
-# Count people by age
-df.groupBy("age").count().show()
+# 3. Output data: show result in the console
+names.show()
+allInc.show()
+older21.show()
+countByAge.show()
