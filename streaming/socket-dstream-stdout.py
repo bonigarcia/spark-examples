@@ -1,21 +1,22 @@
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 
-# Local SparkContext using * threads, depending on the number of logical processors
-sc = SparkContext("local[*]", "SocketWordCount")
+# Local SparkContext
+sc = SparkContext(master="local[*]", appName="socket-DStream-StdOut")
 
-# Create a local StreamingContext with a batch interval of 5 seconds
+# StreamingContext with a batch interval of 5 seconds
 ssc = StreamingContext(sc, 5)
 
-# Create a DStream that will connect to hostname:port
+# 1. Input data: create a DStream that receives data from a socket
 lines = ssc.socketTextStream("localhost", 9999)
 
-# Split each line into words and count words in each batch
+# 2. Data processing: word count
 words = lines.flatMap(lambda line: line.split(" "))
 pairs = words.map(lambda word: (word, 1))
 wordCounts = pairs.reduceByKey(lambda x, y: x + y)
 
-# Print the word count of each RDD generated in this DStream to the standard output
+# 3. Output data: show result in the console
+# Print the word count of each RDD generated in this DStream
 wordCounts.pprint()
 
 ssc.start()             # Start the computation
