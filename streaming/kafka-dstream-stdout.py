@@ -3,7 +3,8 @@ from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 
 sc = SparkContext(conf=SparkConf()
-                  .setAppName("KafkaWordCount")
+                  .setMaster("local[*]")
+                  .setAppName("KafKa-DStream-StdOut")
                   .set("spark.jars.packages", "org.apache.spark:spark-streaming-kafka-0-8_2.11:2.4.5"))
 ssc = StreamingContext(sc, 5)
 
