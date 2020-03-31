@@ -1,36 +1,36 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import explode
-from pyspark.sql.functions import split
+from pyspark.sql.functions import explode, split
 
-spark = SparkSession \
-    .builder \
-    .master("local[*]") \
-    .appName("StructuredNetworkWordCount") \
-    .getOrCreate()
+# Local SparkSession
+spark = (SparkSession
+         .builder
+         .master("local[*]")
+         .appName("Socket-DataFrame-StdOut")
+         .config("spark.sql.shuffle.partitions", "20")
+         .getOrCreate())
 
-# Create DataFrame representing the stream of input lines from connection to localhost:9999
-lines = spark \
-    .readStream \
-    .format("socket") \
-    .option("host", "localhost") \
-    .option("port", 9999) \
-    .load()
+# 1. Input data:  DataFrame representing the stream of input lines from socket
+lines = (spark
+         .readStream
+         .format("socket")
+         .option("host", "localhost")
+         .option("port", 9999)
+         .load())
 
-# Split the lines into words
+# 2. Data processing: word count
 words = lines.select(
     explode(
         split(lines.value, " ")
     ).alias("word")
 )
-
-# Generate running word count
 wordCounts = words.groupBy("word").count()
 
-# Start running the query that prints the running counts to the console
-query = wordCounts \
-    .writeStream \
-    .outputMode("complete") \
-    .format("console") \
-    .start()
+# 3. Output data: show result in the console
+# Print the word count in "complete" mode (entire table)
+query = (wordCounts
+         .writeStream
+         .outputMode("complete")
+         .format("console")
+         .start())
 
 query.awaitTermination()
