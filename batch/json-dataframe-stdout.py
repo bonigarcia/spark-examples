@@ -13,7 +13,7 @@ df = spark.read.json("../data/people.json")
 df.show()  # Displays the content to stdout
 df.printSchema()  # Displays the schema to stdout
 
-# 2. Data processing: word count
+# 2. Data processing: different queries
 names = df.select("name")
 allInc = df.select(df['name'], df['age'] + 1)
 older21 = df.filter(df['age'] > 21)
