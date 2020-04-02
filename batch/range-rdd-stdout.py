@@ -1,7 +1,7 @@
 from pyspark import SparkContext
 
 # Local SparkContext using N threads (N = number of logical processors)
-sc = SparkContext(master="local[*]", appName="range-DTT-stdout")
+sc = SparkContext(master="local[*]", appName="range-RDD-stdout")
 
 # 1. Input data: list of integers (unstructured batch)
 data = range(1, 10001)
