@@ -1,7 +1,7 @@
 from pyspark import SparkContext
 
 # Local SparkContext
-sc = SparkContext(master="local[*]", appName="textFile-DTT-StdOut")
+sc = SparkContext(master="local[*]", appName="textFile-RDD-StdOut")
 
 # 1. Input data: text file
 linesRdd = sc.textFile("../data/hamlet.txt")
