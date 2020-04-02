@@ -6,10 +6,10 @@ spark = (SparkSession
          .builder
          .master("local[*]")
          .appName("Socket-DataFrame-StdOut")
-         .config("spark.sql.shuffle.partitions", "20")
+         .config("spark.sql.shuffle.partitions", "8")
          .getOrCreate())
 
-# 1. Input data:  DataFrame representing the stream of input lines from socket
+# 1. Input data: DataFrame representing the stream of input lines from socket
 lines = (spark
          .readStream
          .format("socket")
@@ -30,6 +30,7 @@ wordCounts = words.groupBy("word").count()
 query = (wordCounts
          .writeStream
          .outputMode("complete")
+         .trigger(processingTime="10 seconds")
          .format("console")
          .start())
 
