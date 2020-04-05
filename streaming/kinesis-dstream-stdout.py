@@ -1,17 +1,19 @@
 import sys
 
-from pyspark import SparkContext
+from pyspark import SparkContext, SparkConf
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.kinesis import KinesisUtils, InitialPositionInStream
 
 if __name__ == "__main__":
     if len(sys.argv) != 5:
-        print(
-            "Usage: " + sys.argv[0] + " <app-name> <stream-name> <endpoint-url> <region-name>",
-            file=sys.stderr)
+        print("Usage: " + sys.argv[0] + " <app-name> <stream-name> <endpoint-url> <region-name>",
+              file=sys.stderr)
         sys.exit(-1)
 
-    sc = SparkContext(appName="KinesisWordCount")
+    sc = SparkContext(master="local[*]",
+                      appName="Kinesis-DStream-StdOut",
+                      conf=SparkConf()
+                      .set("spark.jars.packages", "org.apache.spark:spark-streaming-kinesis-asl_2.11:2.4.5"))
     ssc = StreamingContext(sc, 1)
     appName, streamName, endpointUrl, regionName = sys.argv[1:]
     lines = KinesisUtils.createStream(

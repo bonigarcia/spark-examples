@@ -1,17 +1,19 @@
 from pyspark.sql import SparkSession
 
-spark = SparkSession \
-    .builder \
-    .appName("KafkaStructured") \
-    .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5") \
-    .getOrCreate()
+spark = (SparkSession
+         .builder
+         .master("local[*]")
+         .appName("Kafka-DataFrame-StdOut")
+         .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5")
+         .getOrCreate())
 
-df = spark \
-    .readStream \
-    .format("kafka") \
-    .option("kafka.bootstrap.servers", "localhost:2181") \
-    .option("subscribe", "test-topic") \
-    .load()
+df = (spark
+      .readStream
+      .format("kafka")
+      .option("kafka.bootstrap.servers", "localhost:2181")
+      .option("subscribe", "test-topic")
+      .load())
+
 
 df.printSchema()
 
