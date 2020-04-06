@@ -13,7 +13,7 @@ spark = (SparkSession
 spark.sparkContext.setLogLevel("ERROR")
 
 # Create DataFrame object from JSON file
-people = spark.read.json("../data/people.json")
+people = spark.read.json("../data/people.json", multiLine=True)
 people.printSchema()
 people.show()
 

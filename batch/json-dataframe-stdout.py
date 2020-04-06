@@ -8,7 +8,7 @@ spark = (SparkSession
          .getOrCreate())
 
 # 1. Input data: JSON file
-df = spark.read.json("../data/people.json")
+df = spark.read.json("../data/people.json", multiLine=True)
 
 df.show()  # Displays the content to stdout
 df.printSchema()  # Displays the schema to stdout
