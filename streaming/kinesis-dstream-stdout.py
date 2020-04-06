@@ -19,11 +19,11 @@ if __name__ == "__main__":
 
     # 1. Input data: create a DStream from Kinesis
     appName, streamName, endpointUrl, regionName = sys.argv[1:]
-    lines = KinesisUtils.createStream(
+    stream = KinesisUtils.createStream(
         ssc, appName, streamName, endpointUrl, regionName, InitialPositionInStream.LATEST, 2)
 
     # 2. Data processing: word count
-    counts = lines.flatMap(lambda line: line.split(" ")) \
+    counts = stream.flatMap(lambda line: line.split(" ")) \
         .map(lambda word: (word, 1)) \
         .reduceByKey(lambda a, b: a+b)
 
