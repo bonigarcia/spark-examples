@@ -12,9 +12,19 @@ spark = (SparkSession
 df = (spark
       .readStream
       .format("kafka")
-      .option("kafka.bootstrap.servers", "localhost:2181")
+      .option("kafka.bootstrap.servers", "localhost:9092")
       .option("subscribe", "test-topic")
       .load())
-
 df.printSchema()
-df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
+
+# 2. Data processing: read value
+lines = df.selectExpr("CAST(value AS STRING)")
+
+# 3. Output data: show result in the console
+query = (lines
+         .writeStream
+         .outputMode("append")
+         .format("console")
+         .start())
+
+query.awaitTermination()
