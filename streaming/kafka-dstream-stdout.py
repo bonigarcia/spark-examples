@@ -10,9 +10,8 @@ sc = SparkContext(master="local[*]",
 ssc = StreamingContext(sc, 5)
 
 # 1. Input data: create a DStream from Apache Kafka
-topic = {"test-topic": 1}  # Topic dictionary (topic-name : num-partitions)
 stream = KafkaUtils.createStream(
-    ssc, "localhost:2181", "spark-streaming-consumer", topic)
+    ssc, "localhost:2181", "spark-streaming-consumer", {"test-topic": 1})
 
 # 2. Data processing: word count
 counts = (stream.map(lambda x: x[1])
