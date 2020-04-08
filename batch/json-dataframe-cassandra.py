@@ -19,17 +19,17 @@ people.show()
 
 # Write DataFrame in Cassandra including id column
 randomId = udf(lambda: str(uuid4()), StringType())
-people.withColumn("id", randomId()) \
-    .write \
-    .format("org.apache.spark.sql.cassandra") \
-    .options(keyspace="test", table="people") \
-    .mode("append") \
-    .save()
+(people.withColumn("id", randomId())
+ .write
+ .format("org.apache.spark.sql.cassandra")
+ .options(keyspace="test", table="people")
+ .mode("append")
+ .save())
 
 # Read DataFrame from Cassandra
-readDf = spark.read \
-    .format("org.apache.spark.sql.cassandra") \
-    .options(keyspace="test", table="people")\
-    .load()
+readDf = (spark.read
+          .format("org.apache.spark.sql.cassandra")
+          .options(keyspace="test", table="people")
+          .load())
 readDf.printSchema()
 readDf.show(truncate=False)
