@@ -5,7 +5,7 @@ from uuid import uuid4
 spark = (SparkSession
          .builder
          .master("local[*]")
-         .appName("JsonDataFrameCassandra")
+         .appName("JSON-DataFrame-Cassandra")
          .config("spark.jars.packages", "com.datastax.spark:spark-cassandra-connector_2.11:2.4.3")
          .config("spark.cassandra.connection.host", "localhost")
          .config("spark.cassandra.connection.port", "9042")
