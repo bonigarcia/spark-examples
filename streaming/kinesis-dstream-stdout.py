@@ -6,7 +6,7 @@ from pyspark.streaming.kinesis import KinesisUtils, InitialPositionInStream
 
 if __name__ == "__main__":
     if len(sys.argv) != 5:
-        print("Usage: " + sys.argv[0] + " <app-name> <stream-name> <endpoint-url> <region-name>",
+        print(f"Usage: {sys.argv[0]} <app-name> <stream-name> <endpoint-url> <region-name>",
               file=sys.stderr)
         sys.exit(-1)
 

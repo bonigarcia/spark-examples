@@ -5,9 +5,8 @@ from pyspark.streaming import StreamingContext
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print(
-            "Usage: " + sys.argv[0] + " <input-folder> <output-folder>",
-            file=sys.stderr)
+        print(f"Usage: {sys.argv[0]} <input-folder> <output-folder>",
+              file=sys.stderr)
         sys.exit(-1)
 
     # Local SparkContext and StreamingContext (batch interval of 10 seconds)

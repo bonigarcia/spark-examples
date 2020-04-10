@@ -11,6 +11,6 @@ wordsRddMap = linesRdd.map(lambda line: line.split(" "))
 wordsRddFlatMap = linesRdd.flatMap(lambda line: line.split(" "))
 
 # 3. Output data: compare input and output
-print("Input: " + str(linesRdd.collect()))
-print("Output using map(): " + str(wordsRddMap.collect()))
-print("Output using flatMap(): " + str(wordsRddFlatMap.collect()))
+print("Input", linesRdd.collect())
+print("Output using map()", wordsRddMap.collect())
+print("Output using flatMap()", wordsRddFlatMap.collect())
