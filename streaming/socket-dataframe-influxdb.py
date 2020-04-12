@@ -7,16 +7,16 @@ from datetime import datetime
 import configparser
 
 
-def writePoint(rdd):
+def saveRddToInfluxDB(rdd):
     count = rdd["count"]
     print(f"Writing {count} to InfluxDB")
-    point = Point("test-measurement").field("wordcount",
-                                            count).time(time=datetime.utcnow())
+    point = Point("wordcount").field(
+        "count", count).time(time=datetime.utcnow())
     influxWrite.write(bucket=bucket, org=org, record=point)
 
 
-def storeInInfluxDB(dataframe, epochId):
-    dataframe.rdd.foreach(writePoint)
+def saveDataFreameToInfluxDB(dataframe, epochId):
+    dataframe.rdd.foreach(saveRddToInfluxDB)
 
 
 # Local SparkSession
@@ -59,7 +59,7 @@ wordCounts = words.groupBy("word").count()
 query = (wordCounts
          .writeStream
          .outputMode("update")
-         .foreachBatch(storeInInfluxDB)
+         .foreachBatch(saveDataFreameToInfluxDB)
          .start())
 
 query.awaitTermination()
