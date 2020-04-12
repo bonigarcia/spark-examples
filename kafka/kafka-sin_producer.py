@@ -1,5 +1,4 @@
 from kafka import KafkaProducer
-from kafka.errors import KafkaError
 from random import randrange
 from math import sin
 import time
