@@ -2,7 +2,6 @@ from kafka import KafkaProducer
 from random import randrange
 import time
 
-# Reference: https://kafka-python.readthedocs.io/en/master/index.html
 producer = KafkaProducer(bootstrap_servers=["localhost:9092"])
 startTime = time.time()
 waitSeconds = 1.0
