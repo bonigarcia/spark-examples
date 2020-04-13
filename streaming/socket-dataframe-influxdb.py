@@ -1,6 +1,5 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import explode
-from pyspark.sql.functions import split
+from pyspark.sql.functions import explode, split
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 from datetime import datetime
