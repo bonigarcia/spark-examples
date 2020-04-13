@@ -2,6 +2,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import udf, StringType
 from uuid import uuid4
 
+# Local SparkSession
 spark = (SparkSession
          .builder
          .master("local[*]")
@@ -12,7 +13,7 @@ spark = (SparkSession
          .getOrCreate())
 spark.sparkContext.setLogLevel("ERROR")
 
-# Create DataFrame object from JSON file
+# Input data: Create DataFrame object from JSON file
 people = spark.read.json("../data/people.json", multiLine=True)
 people.printSchema()
 people.show()

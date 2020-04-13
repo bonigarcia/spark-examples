@@ -13,7 +13,7 @@ def writeToCassandra(dataframe, epochId):
         .mode("append")
         .save())
 
-
+# Local SparkSession
 spark = (SparkSession
          .builder
          .master("local[*]")
@@ -25,7 +25,7 @@ spark = (SparkSession
          .getOrCreate())
 spark.sparkContext.setLogLevel("ERROR")
 
-# Create DataFrame from socket stream
+# 1. Input data: Create DataFrame from socket stream
 lines = (spark
          .readStream
          .format("socket")
@@ -33,15 +33,15 @@ lines = (spark
          .option("port", 9999)
          .load())
 
-# Split the lines into words
+# 2. Data processing: word count
 words = lines.select(
     explode(
         split(lines.value, " ")
     ).alias("word")
 )
-
-# Generate running word count
 wordCounts = words.groupBy("word").count()
+
+# 3. Output data: write results to Cassandra
 query = (wordCounts
          .writeStream
          .outputMode("update")
