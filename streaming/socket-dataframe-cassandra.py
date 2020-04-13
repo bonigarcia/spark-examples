@@ -1,10 +1,13 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import explode
-from pyspark.sql.functions import split
+from pyspark.sql.functions import explode, split, udf, StringType
+from uuid import uuid4
 
 
 def writeToCassandra(dataframe, epochId):
-    (dataframe.write
+    print(f"Writing DataFrame to Cassandra (micro-batch {epochId})")
+    randomId = udf(lambda: str(uuid4()), StringType())
+    (dataframe.withColumn("id", randomId())
+        .write
         .format("org.apache.spark.sql.cassandra")
         .options(keyspace="test", table="wordcount")
         .mode("append")
@@ -18,6 +21,7 @@ spark = (SparkSession
          .config("spark.jars.packages", "com.datastax.spark:spark-cassandra-connector_2.11:2.4.3")
          .config("spark.cassandra.connection.host", "localhost")
          .config("spark.cassandra.connection.port", "9042")
+         .config("spark.sql.shuffle.partitions", "8")
          .getOrCreate())
 spark.sparkContext.setLogLevel("ERROR")
 
@@ -41,6 +45,7 @@ wordCounts = words.groupBy("word").count()
 query = (wordCounts
          .writeStream
          .outputMode("update")
+         .trigger(processingTime="10 seconds")
          .foreachBatch(writeToCassandra)
          .start())
 
