@@ -2,7 +2,6 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import explode, split
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
-import configparser
 
 
 def saveRddToInfluxDB(rdd):
@@ -26,14 +25,10 @@ spark = (SparkSession
          .getOrCreate())
 spark.sparkContext.setLogLevel("ERROR")
 
-# InfluxDB client
-config = configparser.ConfigParser()
-config.read("../config/influxdb.ini")  # Read config from external file
-token = config["influxdb"]["token"]
-bucket = config["influxdb"]["bucket"]
-org = config["influxdb"]["org"]
-influxUrl = config["influxdb"]["influxUrl"]
-influxClient = InfluxDBClient(url=influxUrl, token=token, org=org)
+# InfluxDB client (update this info to run this example)
+influxClient = InfluxDBClient.from_config_file("../config/influxdb.ini")
+bucket = "boni.garcia's Bucket"
+org = "boni.garcia@uc3m.es"
 
 # 1. Input data: streaming DataFrame from socket
 lines = (spark

@@ -3,7 +3,6 @@ from pyspark.streaming.kafka import KafkaUtils
 from pyspark.streaming import StreamingContext
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
-import configparser
 
 
 def saveToInfluxDB(rdd):
@@ -24,15 +23,10 @@ sc = SparkContext(master="local[*]",
 sc.setLogLevel("ERROR")
 ssc = StreamingContext(sc, 1)
 
-# InfluxDB client
-config = configparser.ConfigParser()
-config.read("../config/influxdb.ini")  # Read config from external file
-token = config["influxdb"]["token"]
-bucket = config["influxdb"]["bucket"]
-org = config["influxdb"]["org"]
-influxUrl = config["influxdb"]["influxUrl"]
-influxClient = InfluxDBClient(
-    url="InfluxDB URL", token="my token", org="my org")
+# InfluxDB client (update this info to run this example)
+influxClient = InfluxDBClient.from_config_file("../config/influxdb.ini")
+bucket = "boni.garcia's Bucket"
+org = "boni.garcia@uc3m.es"
 
 # 1. Input data: create a DStream from Apache Kafka
 stream = KafkaUtils.createStream(
