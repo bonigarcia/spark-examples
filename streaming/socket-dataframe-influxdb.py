@@ -2,16 +2,15 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import explode, split
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
-from datetime import datetime
 import configparser
 
 
 def saveRddToInfluxDB(rdd):
     count = rdd["count"]
     print(f"Writing {count} to InfluxDB")
-    point = Point("wordcount").field(
-        "count", count).time(time=datetime.utcnow())
-    influxWrite.write(bucket=bucket, org=org, record=point)
+    point = Point("wordcount").field("count", count)
+    influxClient.write_api(write_options=SYNCHRONOUS).write(
+        bucket=bucket, org=org, record=point)
 
 
 def saveDataFreameToInfluxDB(dataframe, epochId):
@@ -35,7 +34,6 @@ bucket = config["influxdb"]["bucket"]
 org = config["influxdb"]["org"]
 influxUrl = config["influxdb"]["influxUrl"]
 influxClient = InfluxDBClient(url=influxUrl, token=token, org=org)
-influxWrite = influxClient.write_api(write_options=SYNCHRONOUS)
 
 # 1. Input data: streaming DataFrame from socket
 lines = (spark

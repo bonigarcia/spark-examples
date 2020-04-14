@@ -3,7 +3,6 @@ from pyspark.streaming.kafka import KafkaUtils
 from pyspark.streaming import StreamingContext
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
-from datetime import datetime
 import configparser
 
 
@@ -12,9 +11,9 @@ def saveToInfluxDB(rdd):
     if len(data) == 1:
         sinValue = float(data[0])
         print(f"Writing {sinValue} to InfluxDB")
-        point = Point("sine-wave").field("value",
-                                         sinValue).time(time=datetime.utcnow())
-        influxWrite.write(bucket=bucket, org=org, record=point)
+        point = Point("sine-wave").field("value", sinValue)
+        influxClient.write_api(write_options=SYNCHRONOUS).write(
+            bucket=bucket, org=org, record=point)
 
 
 # Local SparkContext and StreamingContext
@@ -32,8 +31,8 @@ token = config["influxdb"]["token"]
 bucket = config["influxdb"]["bucket"]
 org = config["influxdb"]["org"]
 influxUrl = config["influxdb"]["influxUrl"]
-influxClient = InfluxDBClient(url=influxUrl, token=token, org=org)
-influxWrite = influxClient.write_api(write_options=SYNCHRONOUS)
+influxClient = InfluxDBClient(
+    url="InfluxDB URL", token="my token", org="my org")
 
 # 1. Input data: create a DStream from Apache Kafka
 stream = KafkaUtils.createStream(
