@@ -16,7 +16,7 @@ df.printSchema()  # Displays the schema to stdout
 # 2. Data processing: different queries
 names = df.select("name")
 allInc = df.select(df["name"], df["age"] + 1)
-older21 = df.where(df["age"] > 21)
+older21 = df.filter(df["age"] > 21)
 countByAge = df.groupBy("age").count()
 
 # 3. Output data: show result in the console
