@@ -1,7 +1,6 @@
 from pyspark.sql import SparkSession
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
-from pyspark.sql.functions import udf
 
 
 def triangle(x, phase, length, amplitude):
