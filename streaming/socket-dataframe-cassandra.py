@@ -45,7 +45,6 @@ wordCounts = words.groupBy("word").count()
 query = (wordCounts
          .writeStream
          .outputMode("update")
-         .trigger(processingTime="10 seconds")
          .foreachBatch(writeToCassandra)
          .start())
 

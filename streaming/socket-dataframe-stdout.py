@@ -30,7 +30,6 @@ wordCounts = words.groupBy("word").count()
 query = (wordCounts
          .writeStream
          .outputMode("complete")
-         .trigger(processingTime="10 seconds")
          .format("console")
          .start())
 
