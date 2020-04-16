@@ -4,8 +4,8 @@ from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 
 
-def saveRddToInfluxDB(rdd):
-    count = rdd["count"]
+def saveRowToInfluxDB(row):
+    count = row["count"]
     print(f"Writing {count} to InfluxDB")
     point = Point("wordcount").field("count", count)
     influxClient.write_api(write_options=SYNCHRONOUS).write(
@@ -13,7 +13,8 @@ def saveRddToInfluxDB(rdd):
 
 
 def saveDataFreameToInfluxDB(dataframe, epochId):
-    dataframe.rdd.foreach(saveRddToInfluxDB)
+    for row in dataframe.rdd.collect():  # To save data in order
+        saveRowToInfluxDB(row)
 
 
 # Local SparkSession
@@ -38,7 +39,7 @@ lines = (spark
          .option("port", 9999)
          .load())
 
-# 2. Data processing: word cound
+# 2. Data processing: word count
 words = lines.select(
     explode(
         split(lines.value, " ")
