@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import udf, StringType
+from pyspark.sql.functions import udf
 from uuid import uuid4
 
 # Local SparkSession
@@ -19,7 +19,7 @@ people.printSchema()
 people.show()
 
 # Write DataFrame in Cassandra including id column
-randomId = udf(lambda: str(uuid4()), StringType())
+randomId = udf(lambda: str(uuid4()))
 (people.withColumn("id", randomId())
  .write
  .format("org.apache.spark.sql.cassandra")
