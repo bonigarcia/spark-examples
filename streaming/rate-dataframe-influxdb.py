@@ -1,6 +1,8 @@
 from pyspark.sql import SparkSession
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
+from pyspark.sql.functions import udf
+from pyspark.sql.types import FloatType
 
 
 def triangle(x, phase, length, amplitude):
@@ -11,17 +13,17 @@ def triangle(x, phase, length, amplitude):
         ((x-phase) % length > length/2)
 
 
-def saveRowToInfluxDB(rdd):
-    value = triangle(rdd["value"], 0, 30, 10)
-    print(f"Writing {value} to InfluxDB")
-    point = Point("triangle").field("value", value)
+def saveRowToInfluxDB(row):
+    tr = row["tr"]
+    ts = row["timestamp"]
+    print(f"Writing {tr} to InfluxDB (timestamp {ts})")
+    point = Point("trwave").field("tr", tr).time(time=ts)
     influxClient.write_api(write_options=SYNCHRONOUS).write(
         bucket=bucket, org=org, record=point)
 
 
 def saveDataFreameToInfluxDB(dataframe, epochId):
-    for row in dataframe.rdd.collect():  # To save data in order
-        saveRowToInfluxDB(row)
+    dataframe.rdd.foreach(saveRowToInfluxDB)
 
 
 # Local SparkSession
@@ -45,10 +47,12 @@ df = (spark
       .option("rowsPerSecond", 1)
       .load())
 
-# 2. Data processing: nothing
+# 2. Data processing: add new column with the value of a triangle wave
+trwave = udf(lambda x: triangle(x, 0, 30, 10), FloatType())
+triangleDf = df.withColumn("tr", trwave(df["value"]))
 
 # 3. Output data: show results in the console
-query = (df
+query = (triangleDf
          .writeStream
          .outputMode("update")
          .format("console")
