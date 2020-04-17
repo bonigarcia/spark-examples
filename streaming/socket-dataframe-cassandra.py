@@ -1,11 +1,12 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import explode, split, udf
+from pyspark.sql.types import StringType
 from uuid import uuid4
 
 
 def writeToCassandra(dataframe, epochId):
     print(f"Writing DataFrame to Cassandra (micro-batch {epochId})")
-    randomId = udf(lambda: str(uuid4()))
+    randomId = udf(lambda: str(uuid4()), StringType())
     (dataframe.withColumn("id", randomId())
         .write
         .format("org.apache.spark.sql.cassandra")
