@@ -18,10 +18,10 @@ df = (spark
 df.printSchema()
 
 # 2. Data processing: read value
-lines = df.selectExpr("CAST(value AS STRING)")
+values = df.selectExpr("CAST(value AS STRING)", "timestamp")
 
 # 3. Output data: show result in the console
-query = (lines
+query = (values
          .writeStream
          .outputMode("append")
          .format("console")
