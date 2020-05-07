@@ -1,8 +1,8 @@
 from pyspark.sql import SparkSession
 
 
-def writeToCassandra(dataframe, epochId):
-    print(f"Writing DataFrame to Cassandra (micro-batch {epochId})")
+def writeToCassandra(dataframe, batchId):
+    print(f"Writing DataFrame to Cassandra (micro-batch {batchId})")
     (dataframe
         .write
         .format("org.apache.spark.sql.cassandra")

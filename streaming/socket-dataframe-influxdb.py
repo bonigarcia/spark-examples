@@ -12,7 +12,7 @@ def saveRowToInfluxDB(row):
         bucket=bucket, org=org, record=point)
 
 
-def saveDataFreameToInfluxDB(dataframe, epochId):
+def saveDataFreameToInfluxDB(dataframe, batchId):
     for row in dataframe.rdd.collect():  # To save data in order
         saveRowToInfluxDB(row)
 

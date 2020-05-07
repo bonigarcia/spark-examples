@@ -22,7 +22,7 @@ def saveRowToInfluxDB(row):
         bucket=bucket, org=org, record=point)
 
 
-def saveDataFreameToInfluxDB(dataframe, epochId):
+def saveDataFreameToInfluxDB(dataframe, batchId):
     dataframe.rdd.foreach(saveRowToInfluxDB)
 
 

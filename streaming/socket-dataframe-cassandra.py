@@ -4,8 +4,8 @@ from pyspark.sql.types import StringType
 from uuid import uuid4
 
 
-def writeToCassandra(dataframe, epochId):
-    print(f"Writing DataFrame to Cassandra (micro-batch {epochId})")
+def writeToCassandra(dataframe, batchId):
+    print(f"Writing DataFrame to Cassandra (micro-batch {batchId})")
     randomId = udf(lambda: str(uuid4()), StringType())
     (dataframe.withColumn("id", randomId())
         .write
