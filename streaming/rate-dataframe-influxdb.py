@@ -3,6 +3,7 @@ from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 from pyspark.sql.functions import udf
 from pyspark.sql.types import FloatType
+from datetime import timezone
 
 
 def triangle(x, phase, length, amplitude):
@@ -13,17 +14,14 @@ def triangle(x, phase, length, amplitude):
         ((x-phase) % length > length/2)
 
 
-def saveRowToInfluxDB(row):
-    tr = row["tr"]
-    ts = row["timestamp"]
-    print(f"Writing {tr} to InfluxDB (timestamp {ts})")
-    point = Point("trwave").field("tr", tr).time(time=ts)
-    influxClient.write_api(write_options=SYNCHRONOUS).write(
-        bucket=bucket, org=org, record=point)
-
-
-def saveDataFreameToInfluxDB(dataframe, batchId):
-    dataframe.rdd.foreach(saveRowToInfluxDB)
+def saveDataFrameToInfluxDB(dataframe, batchId):
+    for row in dataframe.rdd.collect():
+        tr = row["tr"]
+        ts = row["timestamp"].astimezone(timezone.utc)
+        print(f"Writing {tr} to InfluxDB (timestamp {ts})")
+        point = Point("trwave").field("tr", tr).time(time=ts)
+        influxClient.write_api(write_options=SYNCHRONOUS).write(
+            bucket=bucket, org=org, record=point)
 
 
 # Local SparkSession
@@ -54,9 +52,9 @@ triangleDf = df.withColumn("tr", trwave(df["value"]))
 # 3. Output data: show results in the console
 query = (triangleDf
          .writeStream
-         .outputMode("update")
+         .outputMode("append")
          .format("console")
-         .foreachBatch(saveDataFreameToInfluxDB)
+         .foreachBatch(saveDataFrameToInfluxDB)
          .start())
 
 query.awaitTermination()

@@ -3,14 +3,18 @@ from pyspark.streaming.kafka import KafkaUtils
 from pyspark.streaming import StreamingContext
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
+from datetime import datetime
+import json
 
 
 def saveToInfluxDB(rdd):
     data = rdd.collect()
-    if len(data) == 1:
-        sinValue = float(data[0])
-        print(f"Writing {sinValue} to InfluxDB")
-        point = Point("sine-wave").field("value", sinValue)
+    for i in data:
+        sinValue = float(i.get("sin"))
+        timeValue = datetime.strptime(i.get("time"), "%Y-%m-%d %H:%M:%S.%f")
+        print(f"Writing {sinValue} {timeValue} to InfluxDB")
+        point = Point("sine-wave").field("value",
+                                         sinValue).time(time=timeValue)
         influxClient.write_api(write_options=SYNCHRONOUS).write(
             bucket=bucket, org=org, record=point)
 
@@ -32,11 +36,11 @@ org = "boni.garcia@uc3m.es"
 stream = KafkaUtils.createStream(
     ssc, "localhost:2181", "spark-streaming-consumer", {"test-topic": 1})
 
-# 2. Data processing: get numbers
-numbers = stream.map(lambda x: x[1])
+# 2. Data processing: get JSON values
+out = (stream.map(lambda x: json.loads(x[1])))
 
 # 3. Output data: store results in InfluxDb
-numbers.foreachRDD(saveToInfluxDB)
+out.foreachRDD(saveToInfluxDB)
 
 ssc.start()
 ssc.awaitTermination()
