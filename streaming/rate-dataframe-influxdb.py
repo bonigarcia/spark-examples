@@ -53,7 +53,6 @@ triangleDf = df.withColumn("tr", trwave(df["value"]))
 query = (triangleDf
          .writeStream
          .outputMode("append")
-         .format("console")
          .foreachBatch(saveDataFrameToInfluxDB)
          .start())
 
