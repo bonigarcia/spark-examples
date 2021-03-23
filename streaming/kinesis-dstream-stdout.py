@@ -14,7 +14,7 @@ if __name__ == "__main__":
     sc = SparkContext(master="local[*]",
                       appName="Kinesis-DStream-StdOut",
                       conf=SparkConf()
-                      .set("spark.jars.packages", "org.apache.spark:spark-streaming-kinesis-asl_2.11:2.4.5"))
+                      .set("spark.jars.packages", "org.apache.spark:spark-streaming-kinesis-asl_2.11:2.4.7"))
     ssc = StreamingContext(sc, 1)
 
     # 1. Input data: create a DStream from Kinesis

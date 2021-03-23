@@ -23,7 +23,7 @@ def sum_values(list):
 sc = SparkContext(master="local[*]",
                   appName="Kafka-DStream_JSON-StdOut",
                   conf=SparkConf()
-                  .set("spark.jars.packages", "org.apache.spark:spark-streaming-kafka-0-8_2.11:2.4.5"))
+                  .set("spark.jars.packages", "org.apache.spark:spark-streaming-kafka-0-8_2.11:2.4.7"))
 sc.setLogLevel("ERROR")
 ssc = StreamingContext(sc, 1)
 
