@@ -7,6 +7,7 @@ sc = SparkContext(master="local[*]",
                   appName="Kafka-DStream-StdOut",
                   conf=SparkConf()
                   .set("spark.jars.packages", "org.apache.spark:spark-streaming-kafka-0-8_2.11:2.4.7"))
+sc.setLogLevel("ERROR")
 ssc = StreamingContext(sc, 5)
 
 # 1. Input data: create a DStream from Apache Kafka
