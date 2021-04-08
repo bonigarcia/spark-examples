@@ -2,16 +2,17 @@ from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 
 # Local SparkContext
-sc = SparkContext(master="local[*]", appName="socket-DStream-StdOut")
+sc = SparkContext(master="local[*]", appName="Socket-DStream-StdOut")
+sc.setLogLevel("ERROR")
 
 # StreamingContext with a batch interval of 5 seconds
 ssc = StreamingContext(sc, 5)
 
 # 1. Input data: create a DStream that receives data from a socket
-lines = ssc.socketTextStream("localhost", 9999)
+stream = ssc.socketTextStream("localhost", 9999)
 
 # 2. Data processing: word count
-words = lines.flatMap(lambda line: line.split(" "))
+words = stream.flatMap(lambda line: line.split(" "))
 pairs = words.map(lambda word: (word, 1))
 wordCounts = pairs.reduceByKey(lambda x, y: x + y)
 
