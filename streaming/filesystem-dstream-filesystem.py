@@ -9,19 +9,20 @@ if __name__ == "__main__":
               file=sys.stderr)
         sys.exit(-1)
 
-    # Local SparkContext and StreamingContext (batch interval of 10 seconds)
+    # Local SparkContext and StreamingContext (batch interval of 5 seconds)
     sc = SparkContext(master="local[*]",
                       appName="FileSystem-DStream-FileSystem")
-    ssc = StreamingContext(sc, 10)
+    sc.setLogLevel("ERROR")
+    ssc = StreamingContext(sc, 5)
 
     # 1. Input data: create a DStream that read text files from the file system
     inputfolder, outputfolder = sys.argv[1:]
-    lines = ssc.textFileStream("file://" + inputfolder)
+    stream = ssc.textFileStream("file://" + inputfolder)
 
     # 2. Data processing: word count
-    words = lines.flatMap(lambda line: line.split(" "))
-    pairs = words.map(lambda word: (word, 1))
-    wordCounts = pairs.reduceByKey(lambda x, y: x + y)
+    wordCounts = (stream.flatMap(lambda line: line.split(" "))
+                  .map(lambda word: (word, 1))
+                  .reduceByKey(lambda x, y: x + y))
 
     # 3. Output data: store result as text files
     wordCounts.saveAsTextFiles("file://" + outputfolder + "wordcount")
