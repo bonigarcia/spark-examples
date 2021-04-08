@@ -5,7 +5,7 @@ from pyspark.sql.functions import length
 spark = (SparkSession
          .builder
          .master("local[*]")
-         .appName("Socket-DataFrame_Basic-StdOut")
+         .appName("Socket-DataFrame_Nothing-StdOut")
          .getOrCreate())
 
 # 1. Input data: DataFrame representing the stream of input lines from socket
