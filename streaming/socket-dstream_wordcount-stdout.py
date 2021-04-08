@@ -2,7 +2,7 @@ from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 
 # Local SparkContext
-sc = SparkContext(master="local[*]", appName="Socket-DStream-StdOut")
+sc = SparkContext(master="local[*]", appName="Socket-DStream_WordCount-StdOut")
 sc.setLogLevel("ERROR")
 
 # StreamingContext with a batch interval of 5 seconds
