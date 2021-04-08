@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
     # Local SparkContext and StreamingContext (batch interval of 5 seconds)
     sc = SparkContext(master="local[*]",
-                      appName="FileSystem-DStream-FileSystem")
+                      appName="FileSystem-DStream-StdOut")
     sc.setLogLevel("ERROR")
     ssc = StreamingContext(sc, 5)
 
@@ -20,12 +20,12 @@ if __name__ == "__main__":
     stream = ssc.textFileStream("file://" + inputfolder)
 
     # 2. Data processing: word count
-    wordCounts = (stream.flatMap(lambda line: line.split(" "))
-                  .map(lambda word: (word, 1))
-                  .reduceByKey(lambda x, y: x + y))
+    wordCount = (stream.flatMap(lambda line: line.split(" "))
+                 .map(lambda word: (word, 1))
+                 .reduceByKey(lambda x, y: x + y))
 
     # 3. Output data: show result in the standard output
-    wordCounts.pprint()
+    wordCount.pprint()
 
     ssc.start()             # Start the computation
     ssc.awaitTermination()  # Wait for the computation to terminate

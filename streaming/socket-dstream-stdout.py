@@ -14,11 +14,11 @@ stream = ssc.socketTextStream("localhost", 9999)
 # 2. Data processing: word count
 words = stream.flatMap(lambda line: line.split(" "))
 pairs = words.map(lambda word: (word, 1))
-wordCounts = pairs.reduceByKey(lambda x, y: x + y)
+wordCount = pairs.reduceByKey(lambda x, y: x + y)
 
 # 3. Output data: show result in the console
 # Print the word count of each RDD generated in this DStream
-wordCounts.pprint()
+wordCount.pprint()
 
 ssc.start()             # Start the computation
 ssc.awaitTermination()  # Wait for the computation to terminate

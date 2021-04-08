@@ -20,12 +20,12 @@ if __name__ == "__main__":
     stream = ssc.textFileStream("file://" + inputfolder)
 
     # 2. Data processing: word count
-    wordCounts = (stream.flatMap(lambda line: line.split(" "))
-                  .map(lambda word: (word, 1))
-                  .reduceByKey(lambda x, y: x + y))
+    wordCount = (stream.flatMap(lambda line: line.split(" "))
+                 .map(lambda word: (word, 1))
+                 .reduceByKey(lambda x, y: x + y))
 
     # 3. Output data: store result as text files
-    wordCounts.saveAsTextFiles("file://" + outputfolder + "wordcount")
+    wordCount.saveAsTextFiles("file://" + outputfolder + "wordcount")
 
     ssc.start()             # Start the computation
     ssc.awaitTermination()  # Wait for the computation to terminate
