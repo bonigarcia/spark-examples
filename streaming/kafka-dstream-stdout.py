@@ -18,7 +18,7 @@ stream = KafkaUtils.createStream(
 counts = (stream.map(lambda x: x[1])
           .flatMap(lambda line: line.split(" "))
           .map(lambda word: (word, 1))
-          .reduceByKey(lambda a, b: a+b))
+          .reduceByKey(lambda a, b: a + b))
 
 # 3. Output data: show result in the console
 counts.pprint()
