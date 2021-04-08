@@ -6,7 +6,7 @@ spark = (SparkSession
          .builder
          .master("local[*]")
          .appName("Socket-DataFrame-StdOut")
-         .config("spark.sql.shuffle.partitions", "8")
+         .config("spark.sql.shuffle.partitions", "2")
          .getOrCreate())
 
 # 1. Input data: DataFrame representing the stream of input lines from socket

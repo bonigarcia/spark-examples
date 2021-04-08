@@ -22,7 +22,7 @@ spark = (SparkSession
          .builder
          .master("local[*]")
          .appName("Socket-DataFrame-InfluxDB")
-         .config("spark.sql.shuffle.partitions", "8")
+         .config("spark.sql.shuffle.partitions", "2")
          .getOrCreate())
 spark.sparkContext.setLogLevel("ERROR")
 

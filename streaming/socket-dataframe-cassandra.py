@@ -23,7 +23,7 @@ spark = (SparkSession
          .config("spark.jars.packages", "com.datastax.spark:spark-cassandra-connector_2.11:2.4.3")
          .config("spark.cassandra.connection.host", "localhost")
          .config("spark.cassandra.connection.port", "9042")
-         .config("spark.sql.shuffle.partitions", "8")
+         .config("spark.sql.shuffle.partitions", "2")
          .getOrCreate())
 spark.sparkContext.setLogLevel("ERROR")
 
