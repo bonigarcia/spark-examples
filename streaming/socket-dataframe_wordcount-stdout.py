@@ -5,7 +5,7 @@ from pyspark.sql.functions import explode, split
 spark = (SparkSession
          .builder
          .master("local[*]")
-         .appName("Socket-DataFrame-StdOut")
+         .appName("Socket-DataFrame_WordCount-StdOut")
          .config("spark.sql.shuffle.partitions", "2")
          .getOrCreate())
 
