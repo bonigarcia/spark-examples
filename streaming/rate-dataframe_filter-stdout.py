@@ -4,7 +4,7 @@ from pyspark.sql import SparkSession
 spark = (SparkSession
          .builder
          .master("local[*]")
-         .appName("Rate-DataFrame-StdOut")
+         .appName("Rate-DataFrame_Filter-StdOut")
          .getOrCreate())
 
 # 1. Input data: test DataFrame with sequence and timestamp
