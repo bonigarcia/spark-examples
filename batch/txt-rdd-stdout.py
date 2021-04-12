@@ -9,7 +9,7 @@ linesRdd = sc.textFile("../data/hamlet.txt")
 # 2. Data processing: word count
 wordsRdd = linesRdd.flatMap(lambda line: line.split(" "))
 pairsRdd = wordsRdd.map(lambda s: (s, 1))
-countsRdd = pairsRdd.reduceByKey(lambda a, b: a + b)
+countsRdd = pairsRdd.reduceByKey(lambda x, y: x + y)
 wordcount = countsRdd.collect()
 
 # 3. Output data: show result in the console
