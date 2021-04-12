@@ -13,7 +13,7 @@ def saveDataFreameToInfluxDB(dataframe, batchId):
         point = Point("sine-wave").field("value",
                                          sinValue).time(time=timeValue)
         influxClient.write_api(write_options=SYNCHRONOUS).write(
-            bucket=bucket, org=org, record=point)
+            bucket=bucket, record=point)
 
 
 # Local SparkSession
@@ -28,7 +28,6 @@ spark.sparkContext.setLogLevel("ERROR")
 # InfluxDB client (update this info to run this example)
 influxClient = InfluxDBClient.from_config_file("../config/influxdb.ini")
 bucket = "boni.garcia's Bucket"
-org = "boni.garcia@uc3m.es"
 
 # 1. Input data: DataFrame from Apache Kafka
 df = (spark

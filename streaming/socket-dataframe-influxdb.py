@@ -9,7 +9,7 @@ def saveRowToInfluxDB(row):
     print(f"Writing {count} to InfluxDB")
     point = Point("wordcount").field("count", count)
     influxClient.write_api(write_options=SYNCHRONOUS).write(
-        bucket=bucket, org=org, record=point)
+        bucket=bucket, record=point)
 
 
 def saveDataFreameToInfluxDB(dataframe, batchId):
@@ -29,7 +29,6 @@ spark.sparkContext.setLogLevel("ERROR")
 # InfluxDB client (update this info to run this example)
 influxClient = InfluxDBClient.from_config_file("../config/influxdb.ini")
 bucket = "boni.garcia's Bucket"
-org = "boni.garcia@uc3m.es"
 
 # 1. Input data: streaming DataFrame from socket
 lines = (spark
