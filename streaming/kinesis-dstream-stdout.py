@@ -25,7 +25,7 @@ if __name__ == "__main__":
     # 2. Data processing: word count
     counts = (stream.flatMap(lambda line: line.split(" "))
               .map(lambda word: (word, 1))
-              .reduceByKey(lambda a, b: a+b))
+              .reduceByKey(lambda x, y: x + y))
 
     # 3. Output data: show result in the console
     counts.pprint()
