@@ -23,12 +23,12 @@ if __name__ == "__main__":
         ssc, appName, streamName, endpointUrl, regionName, InitialPositionInStream.LATEST, 1)
 
     # 2. Data processing: word count
-    counts = (stream.flatMap(lambda line: line.split(" "))
-              .map(lambda word: (word, 1))
-              .reduceByKey(lambda x, y: x + y))
+    count = (stream.flatMap(lambda line: line.split(" "))
+             .map(lambda word: (word, 1))
+             .reduceByKey(lambda x, y: x + y))
 
     # 3. Output data: show result in the console
-    counts.pprint()
+    count.pprint()
 
     ssc.start()
     ssc.awaitTermination()

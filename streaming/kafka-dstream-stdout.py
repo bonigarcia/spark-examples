@@ -15,13 +15,13 @@ stream = KafkaUtils.createStream(
     ssc, "localhost:2181", "spark-streaming-consumer", {"test-topic": 1})
 
 # 2. Data processing: word count
-counts = (stream.map(lambda x: x[1])
-          .flatMap(lambda line: line.split(" "))
-          .map(lambda word: (word, 1))
-          .reduceByKey(lambda x, y: x + y))
+count = (stream.map(lambda x: x[1])
+         .flatMap(lambda line: line.split(" "))
+         .map(lambda word: (word, 1))
+         .reduceByKey(lambda x, y: x + y))
 
 # 3. Output data: show result in the console
-counts.pprint()
+count.pprint()
 
 ssc.start()
 ssc.awaitTermination()
